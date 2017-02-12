@@ -9,6 +9,9 @@ import net.bytebuddy.implementation.MethodDelegation;
 import javax.naming.Context;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.ldap.InitialLdapContext;
+import javax.naming.ldap.LdapContext;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 

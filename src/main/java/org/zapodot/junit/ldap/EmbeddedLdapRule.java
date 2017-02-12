@@ -8,6 +8,7 @@ import org.junit.rules.TestRule;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+import javax.naming.ldap.LdapContext;
 
 /**
  * A JUnit rule that may be used as either a @Rule or a @ClassRule
@@ -48,6 +49,14 @@ public interface EmbeddedLdapRule extends TestRule {
      */
     DirContext dirContext() throws NamingException;
 
+    /**
+     * Like {@link #context()}, but returns a LdapContext
+     *
+     * @return a LdapContext connected to the in-memory LDAP server
+     * @throws NamingException if a LDAP failure happens during DirContext creation
+     */
+    LdapContext ldapContext() throws NamingException;
+    
     /**
      * Gives access to the listening port for the currently running embedded LDAP server.
      * This will make it easier to use other integration mechanisms

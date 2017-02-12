@@ -21,6 +21,7 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -34,6 +35,7 @@ public class EmbeddedLdapRuleImpl implements EmbeddedLdapRule {
     private final AuthenticationConfiguration authenticationConfiguration;
     private LDAPConnection ldapConnection;
     private InitialDirContext initialDirContext;
+    private InitialLdapContext initialLdapContext;
     private boolean isStarted = false;
 
 
@@ -170,6 +172,9 @@ public class EmbeddedLdapRuleImpl implements EmbeddedLdapRule {
             if (initialDirContext != null) {
                 initialDirContext.close();
             }
+            if (initialLdapContext != null) {
+            	initialLdapContext.close();
+            }
         } catch (NamingException e) {
             logger.info("Could not close initial context, forcing server shutdown anyway", e);
         } finally {
@@ -177,6 +182,23 @@ public class EmbeddedLdapRuleImpl implements EmbeddedLdapRule {
         }
 
     }
+
+	@Override
+	public LdapContext ldapContext() throws NamingException {
+		return createOrGetInitialLdapContext();
+	}
+
+	private InitialLdapContext createOrGetInitialLdapContext() throws NamingException {
+	      if (isStarted) {
+	            if (initialLdapContext == null) {
+	            	initialLdapContext = new InitialLdapContext(createLdapEnvironment(),null);
+	            }
+	            return initialLdapContext;
+	        } else {
+	            throw new IllegalStateException(
+	                    "Can not get an InitialDirContext before the embedded LDAP server has been started");
+	        }
+	}
 
 
 }

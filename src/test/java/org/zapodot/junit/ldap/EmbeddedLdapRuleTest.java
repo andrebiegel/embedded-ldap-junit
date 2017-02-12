@@ -9,6 +9,8 @@ import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapContext;
+
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -62,6 +64,18 @@ public class EmbeddedLdapRuleTest {
         assertEquals(1, Iterators.size(Iterators.forEnumeration(resultNamingEnumeration)));
     }
 
+    
+    @Test
+    public void testLdapContext() throws Exception {
+        final DirContext dirContext = embeddedLdapRule.ldapContext();
+        final SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        final NamingEnumeration<javax.naming.directory.SearchResult> resultNamingEnumeration =
+                dirContext.search(DOMAIN_DSN, "(objectClass=person)", searchControls);
+        assertEquals(1, Iterators.size(Iterators.forEnumeration(resultNamingEnumeration)));
+    }
+
+    
     @Test
     public void testContext() throws Exception {
         final Context context = embeddedLdapRule.context();
